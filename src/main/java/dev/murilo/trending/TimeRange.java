@@ -1,6 +1,6 @@
 package dev.murilo.trending;
 
-public enum Duration {
+public enum TimeRange {
     DAY,
     WEEK,
     MONTH,
