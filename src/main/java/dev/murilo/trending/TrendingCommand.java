@@ -2,6 +2,7 @@ package dev.murilo.trending;
 
 import picocli.CommandLine;
 
+import java.time.LocalDate;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "trending-repos",version = "1.0.0",description = "Lista os repositórios em alta do GitHub por período",mixinStandardHelpOptions = true)
@@ -22,7 +23,10 @@ public class TrendingCommand implements Callable<Integer> {
             throw  new CommandLine.ParameterException(spec.commandLine(),"O limite deve estar entre 1 e 100");
 
         }
-        System.out.println("Duração: " + duration + ", Limite: " + limit);
+
+        LocalDate cutOFF = duration.cutoffDate(LocalDate.now());
+
+        System.out.println("Duração: " + duration + ", Limite: " + limit + ", A partir de: " + cutOFF);
         return 0;
     }
 }
