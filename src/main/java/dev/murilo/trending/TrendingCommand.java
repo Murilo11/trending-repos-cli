@@ -26,6 +26,10 @@ public class TrendingCommand implements Callable<Integer> {
 
         LocalDate cutOFF = duration.cutoffDate(LocalDate.now());
 
+        GithubClient githubClient = new GithubClient();
+        String json = githubClient.searchTrending(cutOFF, limit);
+        System.out.println(json);
+
         System.out.println("Duração: " + duration + ", Limite: " + limit + ", A partir de: " + cutOFF);
         return 0;
     }
