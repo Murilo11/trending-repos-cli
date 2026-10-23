@@ -3,6 +3,7 @@ package dev.murilo.trending;
 import picocli.CommandLine;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "trending-repos",version = "1.0.0",description = "Lista os repositórios em alta do GitHub por período",mixinStandardHelpOptions = true)
@@ -27,8 +28,10 @@ public class TrendingCommand implements Callable<Integer> {
         LocalDate cutOFF = duration.cutoffDate(LocalDate.now());
 
         GithubClient githubClient = new GithubClient();
-        String json = githubClient.searchTrending(cutOFF, limit);
-        System.out.println(json);
+        List<Repository> repos = githubClient.searchTrending(cutOFF, limit);
+        for (Repository repo : repos) {
+            System.out.println(repo);
+        }
 
         System.out.println("Duração: " + duration + ", Limite: " + limit + ", A partir de: " + cutOFF);
         return 0;

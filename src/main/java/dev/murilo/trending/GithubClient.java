@@ -1,5 +1,7 @@
 package dev.murilo.trending;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -9,9 +11,13 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 
 public class GithubClient {
-    public String searchTrending(LocalDate cutoff, int limit) throws IOException, InterruptedException {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public List<Repository> searchTrending(LocalDate cutoff, int limit) throws IOException, InterruptedException {
        String query = "created:>" + cutoff;
        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
 
@@ -39,9 +45,10 @@ public class GithubClient {
         if (response.statusCode() != 200) {
             System.err.println("Erro na API do GitHub (status " + response.statusCode() + "):");
             System.err.println(response.body());
-            return null;
+            throw new IOException("Erro na API do GitHub (status " + response.statusCode() + ")");
         }
 
-        return response.body();
+        SearchResponse searchResponse = objectMapper.readValue(response.body(), SearchResponse.class);
+        return searchResponse.items();
     }
 }
