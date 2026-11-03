@@ -17,6 +17,10 @@ public class GithubClient {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final HttpClient client = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
+
     public List<Repository> searchTrending(LocalDate cutoff, int limit) throws IOException, InterruptedException {
        String query = "created:>" + cutoff;
        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
@@ -27,15 +31,10 @@ public class GithubClient {
                + "&order=desc"
                + "&per_page=" + limit;
 
-
-
-        HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("User-Agent","application/vnd.github+json")
+                .header("Accept","application/vnd.github+json")
+                .header("User-Agent", "trending-repos-cli")
                 .timeout(Duration.ofSeconds(10))
                 .GET()
                 .build();
