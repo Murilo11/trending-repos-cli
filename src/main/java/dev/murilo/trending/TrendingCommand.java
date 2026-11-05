@@ -21,20 +21,25 @@ public class TrendingCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        if (limit < 1 || limit > 100){
-            throw new CommandLine.ParameterException(spec.commandLine(), "O limite deve estar entre 1 e 100");
+        try {
+            if (limit < 1 || limit > 100) {
+                throw new CommandLine.ParameterException(spec.commandLine(), "O limite deve estar entre 1 e 100");
+            }
+
+            LocalDate cutOFF = duration.cutoffDate(LocalDate.now());
+
+            GithubClient githubClient = new GithubClient();
+            List<Repository> repos = githubClient.searchTrending(cutOFF, limit);
+
+            for (Repository repo : repos) {
+                System.out.println(repo.format());
+                System.out.println();
+            }
+
+            return 0;
+        } catch (TreandingException e) {
+            System.err.println("Erro: " + e.getMessage());
+            return e.getExitCode();
         }
-
-        LocalDate cutOFF = duration.cutoffDate(LocalDate.now());
-
-        GithubClient githubClient = new GithubClient();
-        List<Repository> repos = githubClient.searchTrending(cutOFF, limit);
-
-        for (Repository repo : repos) {
-            System.out.println(repo.format());
-            System.out.println();
-        }
-
-        return 0;
     }
 }
