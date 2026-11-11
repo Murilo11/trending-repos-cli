@@ -47,12 +47,12 @@ public class GithubClient {
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (HttpTimeoutException e) {
-            throw new TreandingException("Tempo limite de conexão esgotado. Verifique sua conexão com a internet.", e, 3);
+            throw new TrendingException("Tempo limite de conexão esgotado. Verifique sua conexão com a internet.", e, 3);
         } catch (IOException e) {
-            throw new TreandingException("Falha de comunicação com a rede. Verifique se você está conectado à internet.", e, 3);
+            throw new TrendingException("Falha de comunicação com a rede. Verifique se você está conectado à internet.", e, 3);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new TreandingException("A requisição foi interrompida.", e, 3);
+            throw new TrendingException("A requisição foi interrompida.", e, 3);
         }
 
         int status = response.statusCode();
@@ -67,19 +67,19 @@ public class GithubClient {
             } else {
                 mensagem = "Limite de requisições da API do GitHub excedido. Aguarde alguns minutos e tente novamente.";
             }
-            throw new TreandingException(mensagem, null, 2);
+            throw new TrendingException(mensagem, null, 2);
         }
 
         if (status == 422) {
-            throw new TreandingException("Parâmetros de busca inválidos na API do GitHub.", null, 4);
+            throw new TrendingException("Parâmetros de busca inválidos na API do GitHub.", null, 4);
         }
 
         if (status >= 500) {
-            throw new TreandingException("Servidores do GitHub estão indisponíveis no momento. Tente novamente mais tarde.", null, 4);
+            throw new TrendingException("Servidores do GitHub estão indisponíveis no momento. Tente novamente mais tarde.", null, 4);
         }
 
         if (status != 200) {
-            throw new TreandingException("Erro inesperado na API do GitHub (status HTTP " + status + ").", null, 4);
+            throw new TrendingException("Erro inesperado na API do GitHub (status HTTP " + status + ").", null, 4);
         }
 
 
@@ -87,12 +87,12 @@ public class GithubClient {
         try {
             searchResponse = objectMapper.readValue(response.body(), SearchResponse.class);
         } catch (IOException e) {
-            throw new TreandingException("Falha ao processar os dados recebidos do GitHub.", e, 4);
+            throw new TrendingException("Falha ao processar os dados recebidos do GitHub.", e, 4);
         }
 
         List<Repository> items = searchResponse.items();
         if (items == null || items.isEmpty()) {
-            throw new TreandingException("Nenhum repositório encontrado para os critérios informados.", null, 5);
+            throw new TrendingException("Nenhum repositório encontrado para os critérios informados.", null, 5);
         }
 
         return items;
