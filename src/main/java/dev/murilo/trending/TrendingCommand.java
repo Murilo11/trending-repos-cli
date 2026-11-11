@@ -37,7 +37,7 @@ public class TrendingCommand implements Callable<Integer> {
             }
 
             return 0;
-        } catch (TreandingException e) {
+        } catch (TrendingException e) {
             System.err.println("Erro: " + e.getMessage());
             return e.getExitCode();
         }

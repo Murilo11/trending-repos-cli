@@ -27,4 +27,5 @@ replay_pid*
 target/
 .agents
 .gemini
-
+plan-melhorias.md
+plan.md
